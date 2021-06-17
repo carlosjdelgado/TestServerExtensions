@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Globalization;
-using System.Reflection;
+using System.Linq;
+using TestServerExtensions.Routing.Argument;
 using TestServerExtensions.Routing.Utils;
 
 namespace TestServerExtensions.Routing.Tokenizers
@@ -11,46 +12,32 @@ namespace TestServerExtensions.Routing.Tokenizers
     {
         public void AddTokens<T>(TestServerAction action, TokenCollection tokens) where T : class
         {
-            var parameters = action.MethodInfo.GetParameters();
-
-            for (int i = 0; i < parameters.Length; i++)
+            foreach (var argument in action.Arguments)
             {
-                var type = parameters[i].ParameterType;
-
-                if (!type.IsSimple())
+                if (argument.Type.IsSimple() || IgnoreBind(argument))
                 {
-                    if (!IgnoreBind(parameters[i]))
-                    {
-                        foreach (var property in type.GetProperties())
-                        {
-                            var tokenName = property.Name.ToLowerInvariant();
-                            var value = property.GetValue(action.Arguments[i].Instance);
+                    continue;
+                }
 
-                            if (value != null)
-                            {
-                                tokens.AddToken(tokenName, Convert.ToString(value, CultureInfo.InvariantCulture), isConventional: false);
-                            }
-                        }
+                foreach (var property in argument.Type.GetProperties())
+                {
+                    var tokenName = property.Name.ToLowerInvariant();
+                    var value = property.GetValue(argument.Instance);
+
+                    if (value != null)
+                    {
+                        tokens.AddToken(tokenName, Convert.ToString(value, CultureInfo.InvariantCulture), isConventional: false);
                     }
                 }
             }
         }
 
-        private bool IgnoreBind(ParameterInfo parameter)
+        private bool IgnoreBind(TestServerArgument argument)
         {
-            var attributes = parameter.GetCustomAttributes(false);
-
-            foreach (var attribute in attributes)
-            {
-                if (attribute is FromBodyAttribute ||
-                    attribute is FromFormAttribute ||
-                    attribute is BindNeverAttribute)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return argument.Attributes.Any(attribute =>
+                attribute is FromBodyAttribute ||
+                attribute is FromFormAttribute ||
+                attribute is BindNeverAttribute);
         }
     }
 }

@@ -9,18 +9,15 @@ namespace TestServerExtensions.Routing.Tokenizers
     {
         public void AddTokens<T>(TestServerAction action, TokenCollection tokens) where T : class
         {
-            var parameters = action.MethodInfo.GetParameters();
-
-            for (int i = 0; i < parameters.Length; i++)
+            foreach (var argument in action.Arguments)
             {
-                if (parameters[i].ParameterType.IsSimple())
+                if (argument.Type.IsSimple())
                 {
-                    var tokenName = parameters[i].Name.ToLowerInvariant();
-                    var tokenInstance = action.Arguments[i].Instance;
+                    var tokenName = argument.Name.ToLowerInvariant();
 
-                    var tokenValue = tokenInstance is ConstantExpression expression
+                    var tokenValue = argument.Instance is ConstantExpression expression
                         ? expression.Value
-                        : tokenInstance;
+                        : argument.Instance;
 
                     tokens.AddToken(tokenName, Convert.ToString(tokenValue, CultureInfo.InvariantCulture), isConventional: false);
                 }

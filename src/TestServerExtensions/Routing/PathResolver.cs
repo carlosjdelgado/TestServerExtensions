@@ -32,9 +32,9 @@ namespace TestServerExtensions.Routing
         {
             var tokens = new TokenCollection();
 
-            foreach (var tokeniker in _tokenizers)
+            foreach (var tokenizer in _tokenizers)
             {
-                tokeniker.AddTokens<T>(action, tokens);
+                tokenizer.AddTokens<T>(action, tokens);
             }
 
             return tokens;

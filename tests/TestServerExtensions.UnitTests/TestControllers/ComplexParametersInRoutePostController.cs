@@ -13,6 +13,12 @@ namespace TestServerExtensions.UnitTests.TestControllers
             return Ok();
         }
 
+        [HttpPost("path/{intProperty:int}")]
+        public IActionResult RouteWithComplexParameterAndFromFormBody(int intProperty, [FromForm] ComplexParameter complexParameter)
+        {
+            return Ok();
+        }
+
         [HttpPost]
         [Route("path/{doubleOptionalProperty?}")]
         public IActionResult RouteWithComplexParameterNotAllInRoute([FromBody] ComplexParameter complexParameter, double? doubleOptionalProperty)
@@ -22,6 +28,12 @@ namespace TestServerExtensions.UnitTests.TestControllers
 
         [HttpPost("path/{stringProperty:string?}")]
         public IActionResult RouteWithComplexParameterWithNullableProperties(string stringProperty, [FromBody] ComplexParameterWithNullableProperties parameter)
+        {
+            return Ok();
+        }
+
+        [HttpPost("path/{stringProperty:string?}")]
+        public IActionResult RouteWithComplexParameterWithNullablePropertiesAndFromFormBody(string stringProperty, [FromForm] ComplexParameterWithNullableProperties parameter)
         {
             return Ok();
         }

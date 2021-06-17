@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using TestServerExtensions.UnitTests.TestControllers.Models;
 
 namespace TestServerExtensions.UnitTests.TestControllers
@@ -10,6 +9,12 @@ namespace TestServerExtensions.UnitTests.TestControllers
     {
         [HttpPost("path")]
         public IActionResult RouteWithComplexParameter([FromBody] ComplexParameter complexParameter)
+        {
+            return Ok();
+        }
+
+        [HttpPost("path")]
+        public IActionResult RouteWithComplexParameterAndFromFormBody([FromForm] ComplexParameter complexParameter)
         {
             return Ok();
         }

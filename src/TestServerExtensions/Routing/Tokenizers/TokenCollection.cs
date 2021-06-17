@@ -29,7 +29,7 @@ namespace TestServerExtensions.Routing.Tokenizers
         internal IEnumerable<Token> GetUnusedTokens()
         {
             return _activeTokens.Values
-                .Where(token => !token.IsConventional && !token.Used);
+                .Where(token => !token.IsConventional && !token.IsUsed);
         }
 
         internal IEnumerable<Token> GetConventionalTokens()

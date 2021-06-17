@@ -2,11 +2,8 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
+using TestServerExtensions.Content;
 using TestServerExtensions.Routing;
-using TestServerExtensions.Routing.Argument;
 
 namespace Microsoft.AspNetCore.TestHost
 {
@@ -19,6 +16,7 @@ namespace Microsoft.AspNetCore.TestHost
             
             var requestBuilder = server.CreateRequest(path);
             AddFromBodyArgument(requestBuilder, action);
+            AddFromFormArgument(requestBuilder, action);
 
             return requestBuilder;
         }
@@ -28,13 +26,17 @@ namespace Microsoft.AspNetCore.TestHost
             var fromBodyArgument = action.Arguments.SingleOrDefault(argument => argument.IsFromBody);
             if (fromBodyArgument != null)
             {
-                requestBuilder.And(x => x.Content = CreateHttpContent(fromBodyArgument));
+                requestBuilder.And(x => x.Content = new FromBodyContentBuilder().CreateHttpContent(fromBodyArgument));
             }
         }
 
-        private static HttpContent CreateHttpContent(TestServerArgument fromBodyArgument)
+        private static void AddFromFormArgument(RequestBuilder requestBuilder, TestServerAction action)
         {
-            return new StringContent(JsonSerializer.Serialize(fromBodyArgument.Instance), Encoding.UTF8, "application/json");
+            var fromFormArgument = action.Arguments.SingleOrDefault(argument => argument.IsFromForm);
+            if (fromFormArgument != null)
+            {
+                requestBuilder.And(x => x.Content = new FromFormContentBuilder().CreateHttpContent(fromFormArgument));
+            }
         }
 
         private static TestServerAction GetAction<T>(Expression<Func<T, object>> actionSelector) where T : ControllerBase

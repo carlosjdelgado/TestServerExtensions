@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -23,12 +22,11 @@ namespace TestServerExtensions.Routing
             for (int i = 0; i < expressions.Count(); i++)
             {
                 var parameter = MethodInfo.GetParameters()[i];
-                var isFromBody = parameter.GetCustomAttribute<FromBodyAttribute>() != null;
 
                 var instance = ResolveExpressionInstance(expressions.ElementAt(i));
                 if (instance != null)
                 {
-                    var argument = new TestServerArgument(instance, isFromBody);
+                    var argument = new TestServerArgument(instance, parameter);
                     Arguments.Add(argument);
                 }
             }

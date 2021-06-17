@@ -1,14 +1,26 @@
-﻿namespace TestServerExtensions.Routing.Argument
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace TestServerExtensions.Routing.Argument
 {
     internal class TestServerArgument
     {
-        public object Instance { get; private set; }
-        public bool IsFromBody { get; private set; }
+        private readonly ParameterInfo _parameterInfo;
 
-        public TestServerArgument(object instance, bool isFromBody)
+        public object Instance { get; private set; }
+        public Type Type => _parameterInfo.ParameterType;
+        public string Name => _parameterInfo.Name;
+        public IEnumerable<Attribute> Attributes => _parameterInfo.GetCustomAttributes();
+        public bool IsFromBody => Attributes.Any(attribute => attribute is FromBodyAttribute);
+        public bool IsFromForm => Attributes.Any(attribute => attribute is FromFormAttribute);
+
+        public TestServerArgument(object instance, ParameterInfo parameterInfo)
         {
             Instance = instance;
-            IsFromBody = isFromBody;
+            _parameterInfo = parameterInfo;
         }
     }
 }

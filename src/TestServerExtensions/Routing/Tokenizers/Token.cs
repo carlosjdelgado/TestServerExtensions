@@ -5,7 +5,7 @@
         public string Name { get; private set; }
         public string Value { get; private set; }
         public bool IsConventional { get; private set; }
-        public bool Used { get; private set; }
+        public bool IsUsed { get; private set; }
         
         public Token(string name, string value, bool isConvencional)
         {
@@ -16,7 +16,7 @@
 
         public void SetAsUsed()
         {
-            Used = true;
+            IsUsed = true;
         }
     }
 }
