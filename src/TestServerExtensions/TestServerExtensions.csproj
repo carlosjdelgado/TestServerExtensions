@@ -1,8 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<Version>1.0.0-rc1</Version>
+	<Version>1.0.0</Version>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Carlos Jiménez Delgado</Authors>
+    <Description>A suite of extensions for Microsoft.AspNetCore.TestHost</Description>
+    <PackageProjectUrl>https://github.com/carlosjdelgado/TestServerExtensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/carlosjdelgado/TestServerExtensions</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
